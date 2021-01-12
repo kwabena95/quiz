@@ -59,14 +59,15 @@ const startTime = document.querySelector('p .count-down');
 const questionEl = document.querySelector('#questions');
 const optionBtns = document.querySelector('.btn-list');
 const displayMessage = document.querySelector('.display-message');
+const viewhighScore = document.querySelector('.high-score');
+const showScore = document.querySelector('#show-score');
+const closeIcon = document.querySelector('.fas');
 
 // add event listeners
 btnStart.addEventListener('click', startQuiz);
 
 // intialize time
 let timeLeft = 20;
-
-
 
 // set timeInterval
 const setTime = setInterval(() => {
@@ -75,21 +76,18 @@ const setTime = setInterval(() => {
     timeLeft--;
     if (timeLeft <= 0) {
         clearInterval(timeLeft = 0);
+        const buttons = document.querySelectorAll("button.btn-option");
+
+        for (let i = 0; i < buttons.length; i++) {
+            const button = buttons[i];
+            button.disabled = true;
+            quizScore();
+        }
+
+        return setTime;
     }
 
-    return setTime;
 }, 1000);
-
-// view score
-function highScore() {
-    const highScoreTag = document.querySelector('.high-score');
-    const modalContainer = document.querySelector('.modal-container');
-
-    highScoreTag.addEventListener('click', () => {
-        modalContainer.classList.toggle('.show');
-    })
-}
-
 
 // start quiz
 function startQuiz() {
@@ -104,6 +102,7 @@ function startQuiz() {
 
 }
 
+// store the last question in the array in a variable
 const lastQuestion = questionArray.length - 1;
 let currentQuestion = 0;
 let score = 0;
@@ -111,9 +110,9 @@ let count;
 let optBtn;
 // render a question
 function showQuestion() {
-    let q = questionArray[currentQuestion];
-    questionEl.textContent = q.question;
-    let opt = q.option;
+    let questionIndex = questionArray[currentQuestion];
+    questionEl.textContent = questionIndex.question;
+    let opt = questionIndex.option;
 
     // clear out buttons
     clearDisplay();
@@ -135,12 +134,37 @@ function showQuestion() {
 
 }
 
+// view high score
+viewhighScore.addEventListener('click', () => {
+    if (showScore.classList.contains('hide')) {
+        showScore.classList.remove('hide');
+    } else {
+        quizSection.classList.add('hide');
+    }
 
+    // set timer to 0 if user check high score before timer reaches 0
+    if (setTime) {
+        clearInterval(timeLeft = 0);
+    }
+
+});
+
+// close show score
+closeIcon.addEventListener('click', () => {
+    if (startSection.classList.contains('hide')) {
+        startSection.classList.remove('hide');
+    } else {
+        showScore.classList.add('hide');
+        quizSection.classList.add('hide');
+    }
+    btnStart.innerText = 'View high score';
+})
 
 // render score
 function quizScore() {
-    let msg = `You got ${score}/ ${questionArray.length}`;
-    localStorage.setItem('msg', JSON.stringify(msg));
+    let quizScore = `${score} / ${questionArray.length}`
+    let msg = `You got ${score} / ${questionArray.length}`;
+    localStorage.setItem('quizScore', JSON.stringify(quizScore));
     displayMessage.textContent = msg;
     return msg;
 }
@@ -159,11 +183,15 @@ function clearDisplay() {
 // game over
 function gameOver() {
     if (currentQuestion >= lastQuestion || timeLeft <= 0) {
-        optBtn.disabled = true;
+        const buttons = document.querySelectorAll("button.btn-option");
+
+        for (let i = 0; i < buttons.length; i++) {
+            const button = buttons[i];
+            button.disabled = true;
+        }
         stopTime();
         quizScore();
     }
-    highScore();
 }
 
 // check answer
@@ -191,8 +219,26 @@ function incrementQuestion() {
     }
 }
 
-// saveScore
+// highscore
+function highScore() {
+    const input = document.querySelector('#name');
+    const inputBtn = document.querySelector('#btn');
+    const userName = document.querySelector('.name');
+    const userScore = document.querySelector('.score');
 
+    inputBtn.addEventListener('click', () => {
+        let name = input.value;
+        localStorage.setItem('name', JSON.stringify(name));
+        // grab username and score from local storage ans append to username and score
+        userScore.innerText += ` ${JSON.parse(localStorage.getItem('quizScore'))}`;
+        userName.innerText += ` ${JSON.parse(localStorage.getItem('name'))}`;
+    });
+}
+highScore();
+
+
+
+console.log(lastQuestion)
 
 
 

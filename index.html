@@ -21,7 +21,7 @@
         <section class="quiz-section hide" id="quiz-section">
             <div class="quiz-container">
                 <header class="header">
-                    <a href="#score" class="high-score">View high score</a>
+                    <a href="#" class="high-score">View high score</a>
                     <p class="time">Time: <span class="count-down"></span></p>
                 </header>
 
@@ -40,14 +40,22 @@
             </div>
         </section>
 
-
-        <!-- high score modal -->
-        <div class="modal-container">
-            <div class="modal-high-score" id="score">
-                <p class="score">p</p>
+        <section id="show-score" class="show-score hide">
+            <div class="score-container">
+                <i class="fas fa-times"></i>
+                <h3 class="title">That's the end of the quiz!</h3>
+                <div class="user-name">
+                    <label for="name">Name</label><br>
+                    <input type="text" id="name" onfocus="this.value= ''">
+                    <button type="submit" id="btn">Submit</button>
+                </div>
+                <div class="user-score">
+                    <h3 class="title">Quiz scores</h3>
+                    <p class="name">User: </p>
+                    <p class="score">Score: </p>
+                </div>
             </div>
-        </div>
-
+        </section>
 
     </div>
 
@@ -57,7 +65,7 @@
 
 
 
-
+    <script src="https://kit.fontawesome.com/0cb0e7b636.js" crossorigin="anonymous"></script>
     <script src="./assets/js/app.js" type="text/javascript"></script>
 </body>
 
