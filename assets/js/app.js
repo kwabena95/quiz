@@ -6,7 +6,7 @@ const questionArray = [
             { text: 'JavaScript is a scripting language that can be inserted into HTML pages and is understood by web browsers.' },
             { text: 'It can be use as a client-side or server-side.' },
             { text: 'JavaScript is also an object-oriented programming language.' },
-            { text: 'All of the above.', correct: true }
+            { text: 'All of the above.' }
         ],
         answer: 'All of the above.'
 
@@ -63,21 +63,33 @@ const displayMessage = document.querySelector('.display-message');
 // add event listeners
 btnStart.addEventListener('click', startQuiz);
 
+// intialize time
+let timeLeft = 20;
 
-function timeInterval() {
-    // intialize time
-    let timeLeft = 60;
-    // set timeInterval
-    const setTime = setInterval(() => {
-        if (timeLeft >= 0) {
-            startTime.textContent = timeLeft;
-            timeLeft--;
-        } else {
-            clearInterval(timeLeft);
-        }
-    }, 1000);
+
+
+// set timeInterval
+const setTime = setInterval(() => {
+
+    startTime.textContent = timeLeft;
+    timeLeft--;
+    if (timeLeft <= 0) {
+        clearInterval(timeLeft = 0);
+    }
+
     return setTime;
+}, 1000);
+
+// view score
+function highScore() {
+    const highScoreTag = document.querySelector('.high-score');
+    const modalContainer = document.querySelector('.modal-container');
+
+    highScoreTag.addEventListener('click', () => {
+        modalContainer.classList.toggle('.show');
+    })
 }
+
 
 // start quiz
 function startQuiz() {
@@ -87,45 +99,36 @@ function startQuiz() {
     } else {
         startSection.classList.add('hide');
     }
-    // call timeInterval
-    timeInterval();
+    // call showQuestion
     showQuestion();
+
 }
 
 const lastQuestion = questionArray.length - 1;
 let currentQuestion = 0;
 let score = 0;
 let count;
-let r;
+let optBtn;
 // render a question
 function showQuestion() {
     let q = questionArray[currentQuestion];
     questionEl.textContent = q.question;
     let opt = q.option;
+
+    // clear out buttons
+    clearDisplay();
+
+    // loop through options to create multiple answer
     opt.forEach((btn) => {
-        const optBtn = document.createElement('button');
+        optBtn = document.createElement('button');
         optBtn.classList.add('btn-option');
+        // set button text to text in array
         optBtn.textContent = btn.text;
         optionBtns.appendChild(optBtn);
         optBtn.addEventListener('click', (e) => {
-            let r = e.target.innerText === questionArray[currentQuestion].answer;
-
-            if (r) {
-                score++;
-                displayMessage.textContent = 'Correct';
-                displayMessage.style.backgroundColor = 'green';
-            } else {
-                displayMessage.textContent = 'wrong';
-                displayMessage.style.backgroundColor = 'red';
-            }
-            if (currentQuestion < lastQuestion) {
-                currentQuestion++;
-                showQuestion();
-            } else {
-                clearInterval(startTime);
-                quizScore();
-            }
-            console.log(e.target);
+            let checkAnswer = e.target.innerText === questionArray[currentQuestion].answer;
+            checkAnswers(checkAnswer);
+            incrementQuestion();
 
         });
     });
@@ -134,37 +137,62 @@ function showQuestion() {
 
 
 
-function isCorrect() {
-    r.style.backgroundColor = 'green';
-    score++;
-    displayMessage.textContent = 'Correct';
-    // document.querySelector('.btn-option').style.backgroundColor = 'green';
-}
-function notCorrect() {
-    r.style.backgroundColor = 'red';
-    displayMessage.textContent = 'Wrong';
-    // document.querySelector('.btn-option').style.backgroundColor = 'red';
-}
 // render score
 function quizScore() {
     let msg = `You got ${score}/ ${questionArray.length}`;
+    localStorage.setItem('msg', JSON.stringify(msg));
     displayMessage.textContent = msg;
     return msg;
 }
 
-// console.log(questionArray[currentQuestion].answer);
+// stop function
+function stopTime() {
+    clearInterval(setTime);
+}
 
-// start quiz
-// show questions and options
+// clear footer
+function clearDisplay() {
+    // clear out btns for the next question
+    optionBtns.innerHTML = '';
+}
+
+// game over
+function gameOver() {
+    if (currentQuestion >= lastQuestion || timeLeft <= 0) {
+        optBtn.disabled = true;
+        stopTime();
+        quizScore();
+    }
+    highScore();
+}
+
 // check answer
-// add score to each correct answer
-// display message for correct or wrong answer
-// subtract time for wrong answer
-// navigation to next question
+function checkAnswers(answer) {
+    if (answer) {
+        score++;
+        displayMessage.textContent = 'Correct';
 
+    } else {
+        // subtract 5s from time left
+        timeLeft -= 5;
+        displayMessage.textContent = 'wrong';
+    }
+    return answer;
+}
 
+// increment question
+function incrementQuestion() {
+    if (currentQuestion < lastQuestion) {
+        currentQuestion++;
+        showQuestion();
+    } else {
+        gameOver();
 
-console.log(currentQuestion);
+    }
+}
+
+// saveScore
+
 
 
 

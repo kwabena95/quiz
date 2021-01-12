@@ -16,6 +16,34 @@ body{
     position: relative;
     
 }
+
+/* high score modal */
+.container .modal-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    visibility: hidden;
+ }
+ .show{
+     visibility: visible;
+ }
+ .container .modal-container .modal-high-score{
+    width: 400px;
+    height: 300px;
+    background: #f4f4f4;
+    box-shadow: 3px 5px 10px #333;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ 
+ }
 /* start section */
 .start-section{
     width: 100%;
