@@ -77,7 +77,7 @@ const setTime = setInterval(() => {
     if (timeLeft <= 0) {
         clearInterval(timeLeft = 0);
         const buttons = document.querySelectorAll("button.btn-option");
-
+        // disabled button when timer reaches 0
         for (let i = 0; i < buttons.length; i++) {
             const button = buttons[i];
             button.disabled = true;
@@ -128,10 +128,8 @@ function showQuestion() {
             let checkAnswer = e.target.innerText === questionArray[currentQuestion].answer;
             checkAnswers(checkAnswer);
             incrementQuestion();
-
         });
     });
-
 }
 
 // view high score
@@ -142,7 +140,8 @@ viewhighScore.addEventListener('click', () => {
         quizSection.classList.add('hide');
     }
 
-    // set timer to 0 if user check high score before timer reaches 0
+    // set timer to 0 if user check high score before timer reaches 0 or 
+    // quiz is ccomplete
     if (setTime) {
         clearInterval(timeLeft = 0);
     }
@@ -174,14 +173,16 @@ function stopTime() {
     clearInterval(setTime);
 }
 
-// clear footer
+// clear buttons
 function clearDisplay() {
     // clear out btns for the next question
     optionBtns.innerHTML = '';
+    displayMessage.textContent = '';
 }
 
 // game over
 function gameOver() {
+    // disable buttons when quiz is over or when the timer reaches 0
     if (currentQuestion >= lastQuestion || timeLeft <= 0) {
         const buttons = document.querySelectorAll("button.btn-option");
 
@@ -189,7 +190,9 @@ function gameOver() {
             const button = buttons[i];
             button.disabled = true;
         }
+        // stop time
         stopTime();
+        // show score
         quizScore();
     }
 }
@@ -199,12 +202,12 @@ function checkAnswers(answer) {
     if (answer) {
         score++;
         displayMessage.textContent = 'Correct';
-
     } else {
         // subtract 5s from time left
         timeLeft -= 5;
         displayMessage.textContent = 'wrong';
     }
+
     return answer;
 }
 
@@ -236,9 +239,6 @@ function highScore() {
 }
 highScore();
 
-
-
-console.log(lastQuestion)
 
 
 
