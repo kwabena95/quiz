@@ -125,6 +125,9 @@ function showQuestion() {
         optBtn.textContent = btn.text;
         optionBtns.appendChild(optBtn);
         optBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // console.log("Inside button click");
             let checkAnswer = e.target.innerText === questionArray[currentQuestion].answer;
             checkAnswers(checkAnswer);
             incrementQuestion();
@@ -177,7 +180,7 @@ function stopTime() {
 function clearDisplay() {
     // clear out btns for the next question
     optionBtns.innerHTML = '';
-    displayMessage.textContent = '';
+    // displayMessage.textContent = '';
 }
 
 // game over
@@ -199,6 +202,7 @@ function gameOver() {
 
 // check answer
 function checkAnswers(answer) {
+    console.log("Inside checkAnswers");
     if (answer) {
         score++;
         displayMessage.textContent = 'Correct';
