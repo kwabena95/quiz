@@ -92,11 +92,8 @@ const setTime = setInterval(() => {
 // start quiz
 function startQuiz() {
     // add and remove class
-    if (quizSection.classList.contains('hide')) {
-        quizSection.classList.remove('hide');
-    } else {
-        startSection.classList.add('hide');
-    }
+    (quizSection.classList.contains('hide')) ? quizSection.classList.remove('hide') : startSection.classList.add('hide');
+
     // call showQuestion
     showQuestion();
 
@@ -126,22 +123,15 @@ function showQuestion() {
         optionBtns.appendChild(optBtn);
         optBtn.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // console.log("Inside button click");
             let checkAnswer = e.target.innerText === questionArray[currentQuestion].answer;
             checkAnswers(checkAnswer);
             incrementQuestion();
         });
     });
 }
-
 // view high score
 viewhighScore.addEventListener('click', () => {
-    if (showScore.classList.contains('hide')) {
-        showScore.classList.remove('hide');
-    } else {
-        quizSection.classList.add('hide');
-    }
+    (showScore.classList.contains('hide')) ? showScore.classList.remove('hide') : quizSection.classList.add('hide');
 
     // set timer to 0 if user check high score before timer reaches 0 or 
     // quiz is ccomplete
@@ -180,7 +170,6 @@ function stopTime() {
 function clearDisplay() {
     // clear out btns for the next question
     optionBtns.innerHTML = '';
-    // displayMessage.textContent = '';
 }
 
 // game over
@@ -202,10 +191,11 @@ function gameOver() {
 
 // check answer
 function checkAnswers(answer) {
-    console.log("Inside checkAnswers");
+
     if (answer) {
         score++;
         displayMessage.textContent = 'Correct';
+
     } else {
         // subtract 5s from time left
         timeLeft -= 5;
